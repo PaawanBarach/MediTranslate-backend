@@ -250,7 +250,7 @@ def transcribe_audio(audio_bytes: bytes) -> str:
             temp_file.write(audio_bytes)
             temp_file.close()
             
-            # Transcribe
+            # Transcribe - Whisper auto-detects format
             with open(temp_path, "rb") as audio_file:
                 transcription = groq_client.audio.transcriptions.create(
                     file=audio_file,
@@ -260,6 +260,7 @@ def transcribe_audio(audio_bytes: bytes) -> str:
             
             return transcription.strip()
         finally:
+            # Clean up temp file
             if os.path.exists(temp_path):
                 os.remove(temp_path)
     except Exception as e:
